@@ -1,0 +1,187 @@
+import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
+import 'package:easycare/Pages/Authenticitypages/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'authentication.dart';
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String email;
+  String password;
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
+  void login() {
+    if (formkey.currentState.validate()) {
+      formkey.currentState.save();
+      signin(email, password, context).then((value) {
+        if (value != null) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskPage(uid: value.uid),
+              ));
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            // ignore: deprecated_member_use
+            SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+            Align(
+              alignment: Alignment(-0.9, 0.1),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.06,
+                width: MediaQuery.of(context).size.width * 0.14,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
+                // ignore: deprecated_member_use
+                child: new FlatButton(
+                  textColor: Colors.black,
+                  child: Icon(Icons.arrow_back_ios_new_outlined),
+                  onPressed: () {},
+                ),
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            ClipRRect(
+                borderRadius: BorderRadius.circular(25.0),
+                child: Image.asset('Assets/logo.png',
+                    height: 120.0, width: 120.0, fit: BoxFit.cover)),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 17.0),
+              child: Text(
+                "Welcome Back!",
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w900),
+              ),
+            ),
+
+            Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              child: Form(
+                key: formkey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(
+                          hoverColor: Colors.grey,
+                          prefixIcon: CountryCodePicker(
+                            onChanged: print,
+                            // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                            initialSelection: 'IT',
+                            // optional. Shows only country name and flag
+                            showCountryOnly: false,
+                            favorite: ['+91', 'IN'],
+                            // optional. Shows only country name and flag when popup is closed.
+                            showOnlyCountryWhenClosed: false,
+                            // optional. aligns the flag and the Text left
+                            alignLeft: false,
+                          ),
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(15.0),
+                            borderSide: new BorderSide(),
+                          ),
+                          hintText: "Mobile No."),
+                      validator: MultiValidator([
+                        RequiredValidator(errorText: "This Field Is Required"),
+                        EmailValidator(errorText: "Invalid Mobile Number"),
+                      ]),
+                      onChanged: (val) {
+                        email = val;
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            fillColor: Colors.grey,
+                            prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(15.0),
+                              borderSide: new BorderSide(),
+                            ),
+                            hintText: 'Password'),
+                        validator: MultiValidator([
+                          RequiredValidator(errorText: "Password Is Required"),
+                          MinLengthValidator(6,
+                              errorText: "Minimum 6 Characters Required"),
+                        ]),
+                        onChanged: (val) {
+                          password = val;
+                        },
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: MediaQuery.of(context).size.width * 0.87,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30)),
+                      child: RaisedButton(
+                        onPressed: login,
+                        color: Colors.blueAccent[200],
+                        textColor: Colors.white,
+                        child: Text(
+                          "Login",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            /*     MaterialButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => googleSignIn().whenComplete(() async {
+                FirebaseUser user = await FirebaseAuth.instance.currentUser();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => TaskPage(uid: user.uid)));
+              }),
+              child: Image(
+                image: AssetImage('assets/signin.png'),
+                width: 200.0,
+              ),
+            ), */
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: MediaQuery.of(context).padding.top * 12),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignUpScreen()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Do you have account?",
+                    ),
+                    Text(
+                      "SignUp",
+                      style: TextStyle(color: Colors.blueAccent),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
