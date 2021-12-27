@@ -1,5 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easycare/Pages/Authenticitypages/loginpage.dart';
+import 'package:easycare/Pages/Authenticitypages/otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -12,30 +13,42 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  String email;
-  String password;
-  TextEditingController mobilecon=TextEditingController();
+  late String email = '';
+  late String cc = '';
+  late String password = '';
+  TextEditingController mobilecon = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
   void handleSignup() {
-    if (formkey.currentState.validate()) {
-      formkey.currentState.save();
-      signUp(email.trim(), password, context).then((value) async {
-        if (value != null) {
-              await FirebaseAuth.instance.verifyPhoneNumber(
-              phoneNumber: mobilecon.text,
-              verificationCompleted: (AuthCredential credential) {},
-              verificationFailed: (AuthException e) {},
-              codeSent: (String verificationId, [resendToken]) {},
-              codeAutoRetrievalTimeout: (String verificationId) {},
-              ); 
-            Navigator.pushReplacement(
+    if (formkey.currentState!.validate()) {
+      formkey.currentState!.save();
+
+      print("${cc}${mobilecon.text}");
+      /*  FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "${cc}${mobilecon.text}",
+        verificationCompleted: (AuthCredential credential) {},
+        verificationFailed: (FirebaseAuthException e) {},
+        codeSent: (String verificationId, [resendToken]) {
+          print(verificationId);
+          Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskPage(uid: value.uid),
+                builder: (context) => OtpScreen(
+                  
+                ),
               ));
-        }
-      });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      ); */
+      /*  Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TaskPage(uid: ''),
+          )); */
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OTPScreen(phone: "$cc${mobilecon.text}"),
+          ));
     }
   }
 
@@ -58,7 +71,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: new FlatButton(
                   textColor: Colors.black,
                   child: Icon(Icons.arrow_back_ios_new_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
               ),
             ),
@@ -93,13 +108,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
-                      controller:mobilecon,
+                      controller: mobilecon,
                       maxLength: 10,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                           hoverColor: Colors.grey,
                           prefixIcon: CountryCodePicker(
-                            onChanged: print,
+                            onChanged: (val) {
+                              cc = '';
+                              cc = val.dialCode!;
+                            },
                             // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                             initialSelection: 'IT',
                             // optional. Shows only country name and flag
@@ -117,13 +135,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "Mobile No."),
                       validator: MultiValidator([
                         RequiredValidator(errorText: "This Field Is Required"),
-                        EmailValidator(errorText: "Invalid Mobile Number"),
                       ]),
                       onChanged: (val) {
+                        email = '';
                         email = val;
+                        print(email);
                       },
                     ),
-                    // ignore: deprecated_member_use
                     Container(
                       margin: EdgeInsets.only(
                           top: MediaQuery.of(context).padding.top * 0.9),

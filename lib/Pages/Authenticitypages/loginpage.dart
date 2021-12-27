@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
+import 'package:easycare/Pages/Authenticitypages/otp.dart';
 import 'package:easycare/Pages/Authenticitypages/signup.dart';
+import 'package:easycare/Pages/PatientSide/PatientHome.dart';
+import 'package:easycare/Pages/defaultpage.dart';
+import 'package:easycare/shared_pref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'authentication.dart';
@@ -12,22 +18,83 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String email;
-  String password;
+  late String email = '';
+  late String password = '';
+  late String cc = '';
+  var maptmp;
+  late List<DocumentSnapshot> doc;
+  SessionManager prefs = SessionManager();
+
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-  void login() {
-    if (formkey.currentState.validate()) {
-      formkey.currentState.save();
-      signin(email, password, context).then((value) {
-        if (value != null) {
+  Future getdata() async {
+    /* final Future<DocumentSnapshot> document = FirebaseFirestore.instance
+        .collection('users')
+        .doc('${cc}${email}')
+        .get();
+
+    await document.then<dynamic>((DocumentSnapshot snapshot) async {
+      setState(() async {
+        maptmp = snapshot.data();
+        password = maptmp['password'];
+        print(password);
+        print(password);
+        print(password);
+        print(password);
+        print(password);
+      });
+    }); */
+
+    FirebaseFirestore.instance
+        .collection('patient')
+        .doc('$cc$email')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (password == documentSnapshot['password']) {
+          prefs.setAuthToken('loginflag', '1');
+          prefs.setAuthToken('phone', '$cc$email');
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskPage(uid: value.uid),
-              ));
+                  builder: (context) => TaskPage(
+                        context,
+                        phone: '$cc$email',
+                      )));
         }
-      });
+      }
+    });
+    Fluttertoast.showToast(
+        msg: "Invalid Username or Password!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue[400],
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  /*  Future<dynamic> getdata() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('users')
+        .doc('${cc}${email}')
+        .collection('history')
+        .get();
+    doc = result.docs;
+    var document = await FirebaseFirestore.instance
+        .collection('COLLECTION_NAME')
+        .doc('TESTID1')
+        .get();
+  
+    // ignore: unnecessary_statements
+  }
+ */
+  void login() {
+    if (formkey.currentState!.validate()) {
+      formkey.currentState!.save();
+      getdata();
+      getdata();
+      getdata();
     }
   }
 
@@ -51,7 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: new FlatButton(
                   textColor: Colors.black,
                   child: Icon(Icons.arrow_back_ios_new_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
               ),
             ),
@@ -78,7 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                           hoverColor: Colors.grey,
                           prefixIcon: CountryCodePicker(
-                            onChanged: print,
+                            onChanged: (val) {
+                              cc = '';
+                              cc = val.dialCode!;
+                            },
                             // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                             initialSelection: 'IT',
                             // optional. Shows only country name and flag
@@ -96,7 +168,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: "Mobile No."),
                       validator: MultiValidator([
                         RequiredValidator(errorText: "This Field Is Required"),
-                        EmailValidator(errorText: "Invalid Mobile Number"),
                       ]),
                       onChanged: (val) {
                         email = val;

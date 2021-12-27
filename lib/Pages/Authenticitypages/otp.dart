@@ -1,3 +1,4 @@
+import 'package:easycare/Pages/Authenticitypages/SignupScreen.dart';
 import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
 import 'package:easycare/Pages/Authenticitypages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,14 +7,14 @@ import 'package:pinput/pin_put/pin_put.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phone;
-  OTPScreen(this.phone);
+  const OTPScreen({Key? key, required this.phone});
   @override
-  _OTPScreenState createState() => _OTPScreenState();
+  _OTPScreenState createState() => _OTPScreenState(phone);
 }
 
 class _OTPScreenState extends State<OTPScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
-  String _verificationCode;
+  late String _verificationCode;
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
   final BoxDecoration pinPutDecoration = BoxDecoration(
@@ -23,6 +24,9 @@ class _OTPScreenState extends State<OTPScreen> {
       color: const Color.fromRGBO(126, 203, 224, 1),
     ),
   );
+  final String phone;
+
+  _OTPScreenState(this.phone);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +40,7 @@ class _OTPScreenState extends State<OTPScreen> {
             margin: EdgeInsets.only(top: 40),
             child: Center(
               child: Text(
-                'Verify +1-${widget.phone}',
+                'Verify ${phone}',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
               ),
             ),
@@ -64,7 +68,8 @@ class _OTPScreenState extends State<OTPScreen> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpScreen()),
+                              builder: (context) => SignUpScreenPage(
+                                  uid: value.user!.uid, phone: phone)),
                           (route) => false);
                     }
                   });
@@ -84,15 +89,20 @@ class _OTPScreenState extends State<OTPScreen> {
 
   _verifyPhone() async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+1${widget.phone}',
+        phoneNumber: '$phone',
         verificationCompleted: (credential) async {
           await FirebaseAuth.instance
               .signInWithCredential(credential)
               .then((value) async {
             if (value.user != null) {
+              var user = value.user;
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => TaskPage()),
+                  MaterialPageRoute(
+                      builder: (context) => SignUpScreenPage(
+                            uid: value.user!.uid,
+                            phone: phone,
+                          )),
                   (route) => false);
             }
           });

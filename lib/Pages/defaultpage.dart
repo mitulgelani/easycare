@@ -1,9 +1,12 @@
+import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
+import 'package:easycare/Pages/Authenticitypages/authentication.dart';
 import 'package:easycare/Pages/Authenticitypages/loginpage.dart';
+import 'package:easycare/Pages/Authenticitypages/signup.dart';
+import 'package:easycare/profile/profiletask.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPage extends StatefulWidget {
-  const DefaultPage({required Key key}) : super(key: key);
-
   @override
   _DefaultPageState createState() => _DefaultPageState();
 }
@@ -11,6 +14,7 @@ class DefaultPage extends StatefulWidget {
 class _DefaultPageState extends State<DefaultPage> {
   int doneflagu = 0;
   int doneflaga = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,8 +201,18 @@ class _DefaultPageState extends State<DefaultPage> {
                         child: RaisedButton(
                           textColor: Colors.white,
                           color: Colors.black,
-                          child: Text("Sign Up"),
-                          onPressed: () {},
+                          child: Text("SignUp"),
+                          onPressed: () {
+                            doneflaga == 1
+                                ? Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProfileTaskPage(uid: '')))
+                                : Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => TaskPage(
+                                          context,
+                                          phone: '',
+                                        )));
+                          },
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0),
                           ),
