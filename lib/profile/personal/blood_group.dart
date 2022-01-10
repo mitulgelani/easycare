@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class BloodGroup extends StatefulWidget {
+  final String phone;
+  const BloodGroup({Key? key, required this.phone}) : super(key: key);
+
   @override
-  _BloodGroupState createState() => _BloodGroupState();
+  _BloodGroupState createState() => _BloodGroupState(phone);
 }
 
 class _BloodGroupState extends State<BloodGroup> {
@@ -10,6 +14,14 @@ class _BloodGroupState extends State<BloodGroup> {
   late String blood_group;
   late int A1 = 0, A2 = 0, B1 = 0, B2 = 0, O1 = 0, O2 = 0, AB1 = 0, AB2 = 0;
   int flag = 0;
+  final String phone;
+  CollectionReference users = FirebaseFirestore.instance.collection('patient');
+
+  Future<void> updateUser() {
+    return users.doc('$phone').update({'bloodgroup': blood_group});
+  }
+
+  _BloodGroupState(this.phone);
 
   @override
   Widget build(BuildContext context) {
@@ -632,6 +644,7 @@ class _BloodGroupState extends State<BloodGroup> {
                               style: TextStyle(fontSize: 13),
                             ),
                             onPressed: () {
+                              updateUser();
                               Navigator.of(context).pop();
                               print(blood_group);
                             },

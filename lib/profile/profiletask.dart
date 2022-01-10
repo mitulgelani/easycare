@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easycare/Pages/defaultpage.dart';
+import 'package:easycare/shared_pref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:cupertino_icons/cupertino_icons.dart';
-
 import 'e_personal.dart';
 
 class ProfileTaskPage extends StatefulWidget {
@@ -19,6 +20,15 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
 
   final PageController _pageController = PageController();
   int _selectedIndex = 0;
+  SessionManager prefs = SessionManager();
+  late String phone = '', email = '', name = '';
+  initState() {
+    authphone = prefs.getAuthToken('phone');
+    authphone.then((val) {
+      phone = val;
+      getdata();
+    });
+  }
 
   List<String> entries = <String>[
     'My Wallet',
@@ -31,6 +41,24 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
     'Support',
     'Logout',
   ];
+  late Future<String> authphone;
+
+  Future getdata() async {
+    await FirebaseFirestore.instance
+        .collection('patient')
+        .doc(phone)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          name = documentSnapshot['firstname'] +
+              ' ' +
+              documentSnapshot['lastname'];
+          email = documentSnapshot['email'];
+        });
+      }
+    });
+  }
 
   static const icons = <IconData>[
     Icons.account_balance_wallet_rounded,
@@ -239,7 +267,6 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
                               ),
                               tooltip: 'edit Profile',
                               onPressed: () {
-                                print('go fast');
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -278,7 +305,7 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Ruturaj Rahul",
+                        "$name",
                         style: TextStyle(
                             fontSize: 27.0, fontWeight: FontWeight.bold),
                       ),
@@ -286,7 +313,7 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
                         height: 10,
                       ),
                       Text(
-                        "ms_taapsee@indianteam.csk",
+                        "$email",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.0,
@@ -296,7 +323,7 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
                         height: 5,
                       ),
                       Text(
-                        "+33 1937 873 342 ",
+                        "$phone",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
@@ -353,6 +380,14 @@ class _ProfileTaskPageState extends State<ProfileTaskPage> {
                             ],
                           ),
                           onTap: () {
+                            if (i == 8) {
+                              prefs.setAuthToken('loginflag', '0');
+                              prefs.setAuthToken('phone', '');
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DefaultPage()));
+                            }
                             /*  Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) => SecondPage())); */
                           },

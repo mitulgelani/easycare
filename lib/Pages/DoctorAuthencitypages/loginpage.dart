@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
 import 'package:easycare/Pages/Authenticitypages/otp.dart';
 import 'package:easycare/Pages/Authenticitypages/signup.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/Tasks.dart';
 import 'package:easycare/Pages/PatientSide/PatientHome.dart';
 import 'package:easycare/Pages/defaultpage.dart';
 import 'package:easycare/shared_pref.dart';
@@ -12,12 +13,12 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'authentication.dart';
 
-class LoginScreen extends StatefulWidget {
+class DoctorLoginScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _DoctorLoginScreenState createState() => _DoctorLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _DoctorLoginScreenState extends State<DoctorLoginScreen> {
   late String email = '';
   late String password = '';
   late String cc = '';
@@ -46,18 +47,18 @@ class _LoginScreenState extends State<LoginScreen> {
     }); */
 
     FirebaseFirestore.instance
-        .collection('patient')
+        .collection('doctor')
         .doc('$cc$email')
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         if (password == documentSnapshot['password']) {
-          prefs.setAuthToken('loginflag', '1');
-          prefs.setAuthToken('phone', '$cc$email');
+          prefs.setAuthToken('docloginflag', '1');
+          prefs.setAuthToken('docphone', '$cc$email');
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => TaskPage(
+                  builder: (context) => DoctorTaskPage(
                         context,
                         phone: '$cc$email',
                       )));
@@ -131,7 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Image.asset('Assets/newlogo.PNG',
                     height: 120.0, width: 120.0, fit: BoxFit.cover)),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 17.0),
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                "Doctor Side",
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w900),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
                 "Welcome Back!",
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w900),

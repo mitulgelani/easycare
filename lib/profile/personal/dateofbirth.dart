@@ -1,15 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DoB extends StatefulWidget {
+  final String phone;
+
+  const DoB({Key? key, required this.phone}) : super(key: key);
+
   @override
-  _DoBState createState() => _DoBState();
+  _DoBState createState() => _DoBState(phone);
 }
 
 class _DoBState extends State<DoB> {
   late String date = "";
   DateTime selectedDate = DateTime.now();
+  final String phone;
+  CollectionReference users = FirebaseFirestore.instance.collection('patient');
+
+  Future<void> updateUser() {
+    return users.doc('$phone').update({'dob': date});
+  }
+
+  _DoBState(this.phone);
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -27,6 +40,7 @@ class _DoBState extends State<DoB> {
         var formatDate = new DateFormat('dd/MM/yyyy');
         date = formatDate.format(selectedDate);
       });
+    updateUser();
   }
 
   @override

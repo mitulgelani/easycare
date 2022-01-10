@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Gender extends StatefulWidget {
+  final String phone;
+  const Gender({Key? key, required this.phone}) : super(key: key);
+
   @override
-  _GenderState createState() => _GenderState();
+  _GenderState createState() => _GenderState(phone);
 }
 
 class _GenderState extends State<Gender> {
@@ -12,6 +16,14 @@ class _GenderState extends State<Gender> {
   int tapflag1 = 0;
   int tapflag2 = 0;
   int tapflag3 = 0;
+  final String phone;
+  CollectionReference users = FirebaseFirestore.instance.collection('patient');
+
+  Future<void> updateUser() {
+    return users.doc('$phone').update({'gender': gender});
+  }
+
+  _GenderState(this.phone);
 
   @override
   Widget build(BuildContext context) {
@@ -242,6 +254,7 @@ class _GenderState extends State<Gender> {
                               style: TextStyle(fontSize: 13),
                             ),
                             onPressed: () {
+                              updateUser();
                               Navigator.of(context).pop();
                               print(gender);
                             },

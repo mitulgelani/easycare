@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use
 import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
-import 'package:easycare/Pages/Authenticitypages/loginpage.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/Tasks.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/loginpage.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/signupstep2.dart';
 import 'package:easycare/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -8,17 +10,25 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SignUpScreenPage extends StatefulWidget {
+class DoctorSignUpScreenPage extends StatefulWidget {
   final String uid;
   final String phone;
-  const SignUpScreenPage({Key? key, required this.uid, required this.phone})
+  final String category;
+  final String Provider_type;
+  const DoctorSignUpScreenPage(
+      {Key? key,
+      required this.uid,
+      required this.phone,
+      required this.category,
+      required this.Provider_type})
       : super(key: key);
 
   @override
-  _SignUpScreenPageState createState() => _SignUpScreenPageState(uid, phone);
+  _DoctorSignUpScreenPageState createState() =>
+      _DoctorSignUpScreenPageState(uid, phone, category, Provider_type);
 }
 
-class _SignUpScreenPageState extends State<SignUpScreenPage> {
+class _DoctorSignUpScreenPageState extends State<DoctorSignUpScreenPage> {
   SessionManager prefs = SessionManager();
 
   TextEditingController c1 = TextEditingController();
@@ -28,7 +38,11 @@ class _SignUpScreenPageState extends State<SignUpScreenPage> {
   TextEditingController c5 = TextEditingController();
   final String uid;
   final String phone;
-  _SignUpScreenPageState(this.uid, this.phone);
+  final String category;
+  final String Provider_type;
+
+  _DoctorSignUpScreenPageState(
+      this.uid, this.phone, this.category, this.Provider_type);
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +75,14 @@ class _SignUpScreenPageState extends State<SignUpScreenPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 26, top: 20),
                 child: Text(
+                  'Doctor Side',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              Padding(
+                padding: const EdgeInsets.only(left: 26, top: 20),
+                child: Text(
                   'Welcome To EasyCare',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
                 ),
@@ -80,7 +102,7 @@ class _SignUpScreenPageState extends State<SignUpScreenPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                              builder: (context) => DoctorLoginScreen()));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(top: 20, left: 7),
@@ -249,24 +271,29 @@ class _SignUpScreenPageState extends State<SignUpScreenPage> {
                   child: RaisedButton(
                       color: Colors.blue[400],
                       onPressed: () {
+                        print('doc phone' + phone);
+                        print('doc phone' + phone);
+                        print('doc phone' + phone);
                         FirebaseFirestore.instance
-                            .collection('patient')
+                            .collection('doctor')
                             .doc(phone)
                             .set({
                           'firstname': c1.text,
                           'lastname': c2.text,
                           'email': c3.text,
                           'mobile': c4.text,
-                          'password': c5.text
+                          'password': c5.text,
+                          'provider': Provider_type,
+                          'category': category
                         });
-                        prefs.setAuthToken('loginflag', '1');
-                        prefs.setAuthToken('phone', '$phone');
+                        prefs.setAuthToken('docloginflag', '1');
+                        prefs.setAuthToken('docphone', '$phone');
 
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    TaskPage(context, phone: phone)));
+                                    Sigupstep3(phone: phone)));
                       },
                       child: Text(
                         'Sign Up',

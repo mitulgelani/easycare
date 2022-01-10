@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:easycare/Pages/Authenticitypages/loginpage.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/Tasks.dart';
 import 'package:easycare/Pages/defaultpage.dart';
 import 'package:easycare/pref/shared_pref.dart';
 import 'package:easycare/shared_pref.dart';
@@ -50,27 +51,44 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Future<String> authToken = prefs.getAuthToken('loginflag');
     Future<String> authphone = prefs.getAuthToken('phone');
+    Future<String> docauthToken = prefs.getAuthToken('docloginflag');
+    Future<String> docauthphone = prefs.getAuthToken('docphone');
+
     authToken.then((data) {
       print("authToken " + data.toString() + authphone.toString());
     }, onError: (e) {
       print(e);
     });
-    Timer(Duration(seconds: 3), () {
-      /*    Navigator.of(context).pushReplacementNamed(SharedPref.isLogin ? AppRoute.mainScreen : AppRoute.loginScreen); */
-      authToken.then(
-        (data) {
-          if (data.toString() != '1') {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => DefaultPage()));
-          } else {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    TaskPage(context, phone: authphone.toString())));
-          }
 
-          print("authToken " + data.toString());
-        },
-      );
+    Timer(Duration(seconds: 3), () {
+      int flag = 1;
+      /*    Navigator.of(context).pushReplacementNamed(SharedPref.isLogin ? AppRoute.mainScreen : AppRoute.loginScreen); */
+      authToken.then((data) {
+        if (data.toString() == '1') {
+          flag = 0;
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  TaskPage(context, phone: authphone.toString())));
+        }
+      }, onError: (e) {
+        print(e);
+      });
+
+      docauthToken.then((value) {
+        if (value.toString() == '1') {
+          flag = 0;
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  DoctorTaskPage(context, phone: docauthphone.toString())));
+        }
+      }, onError: (e) {
+        print(e);
+      });
+
+      if (flag == 1) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => DefaultPage()));
+      }
     });
 
     super.initState();
@@ -78,7 +96,25 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('Hello There!'));
+    return Scaffold(
+      backgroundColor: Colors.blue[400],
+      body: Center(
+        child: Material(
+          borderRadius: BorderRadius.circular(20),
+          elevation: 50,
+          shadowColor: Colors.black,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(
+              'Assets/newlogo.PNG',
+              height: 145.0,
+              width: 150.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

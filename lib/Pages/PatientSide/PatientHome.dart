@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:easycare/Pages/PatientSide/healthcareprovider/healthcare_provider_1.dart';
+import 'package:easycare/Pages/PatientSide/patientappoinment.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
@@ -355,86 +356,94 @@ class _PatientHomeState extends State<PatientHome> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(18)),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top * 0.5,
-                      ),
-                      height: MediaQuery.of(context).size.height * 0.12,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).padding.top * 0.02,
-                              left: 15,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AppointmentDetails()));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top * 0.5,
+                        ),
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).padding.top * 0.02,
+                                left: 15,
+                              ),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: Image.asset('Assets/person.jpg',
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.1,
+                                          width: 80.0,
+                                          fit: BoxFit.cover)),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 20,
+                                            top: MediaQuery.of(context)
+                                                    .padding
+                                                    .top *
+                                                0.4),
+                                        child: Text(
+                                          '20 sep- 2021 - 3:00 pm',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 20,
+                                            top: MediaQuery.of(context)
+                                                    .padding
+                                                    .top *
+                                                0.3),
+                                        child: Text(
+                                          'Dr. Nathan Roy',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 20,
+                                            top: MediaQuery.of(context)
+                                                    .padding
+                                                    .top *
+                                                0.4),
+                                        child: Text(
+                                          'Care Consultation',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.blue[400],
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: Image.asset('Assets/person.jpg',
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width: 80.0,
-                                        fit: BoxFit.cover)),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 20,
-                                          top: MediaQuery.of(context)
-                                                  .padding
-                                                  .top *
-                                              0.4),
-                                      child: Text(
-                                        '20 sep- 2021 - 3:00 pm',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w900),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 20,
-                                          top: MediaQuery.of(context)
-                                                  .padding
-                                                  .top *
-                                              0.3),
-                                      child: Text(
-                                        'Dr. Nathan Roy',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 20,
-                                          top: MediaQuery.of(context)
-                                                  .padding
-                                                  .top *
-                                              0.4),
-                                      child: Text(
-                                        'Care Consultation',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.blue[400],
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18)),
                       ),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18)),
                     ),
                     Container(
                       margin: EdgeInsets.only(

@@ -1,7 +1,10 @@
+import 'package:easycare/Pages/Authenticitypages/SignupScreen.dart';
 import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
 import 'package:easycare/Pages/Authenticitypages/authentication.dart';
 import 'package:easycare/Pages/Authenticitypages/loginpage.dart';
 import 'package:easycare/Pages/Authenticitypages/signup.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/loginpage.dart';
+import 'package:easycare/Pages/DoctorAuthencitypages/signup.dart';
 import 'package:easycare/profile/profiletask.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +29,7 @@ class _DefaultPageState extends State<DefaultPage> {
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
               child: Image.asset(
-                'Assets/logo.png',
+                'Assets/newlogo.PNG',
                 height: 150.0,
                 width: 150.0,
                 fit: BoxFit.cover,
@@ -177,8 +180,13 @@ class _DefaultPageState extends State<DefaultPage> {
                           color: Colors.white,
                           child: Text("Login"),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                            if (doneflagu == 1)
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => LoginScreen()));
+                            else {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DoctorLoginScreen()));
+                            }
                           },
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0),
@@ -203,15 +211,13 @@ class _DefaultPageState extends State<DefaultPage> {
                           color: Colors.black,
                           child: Text("SignUp"),
                           onPressed: () {
-                            doneflaga == 1
-                                ? Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProfileTaskPage(uid: '')))
-                                : Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => TaskPage(
-                                          context,
-                                          phone: '',
-                                        )));
+                            if (doneflagu == 1)
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SignUpScreen()));
+                            else {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DoctorSignUpScreen()));
+                            }
                           },
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0),
