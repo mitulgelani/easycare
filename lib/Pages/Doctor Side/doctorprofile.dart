@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../shared_pref.dart';
@@ -16,6 +17,7 @@ class DocProfile extends StatefulWidget {
 
 class _DocProfileState extends State<DocProfile> {
   late String gender = '', doctype = '';
+  late bool status = false;
   CollectionReference users = FirebaseFirestore.instance.collection('doctor');
 
   String fullname = '',
@@ -98,6 +100,7 @@ class _DocProfileState extends State<DocProfile> {
               ccharge = documentSnapshot['clinicharges'];
               gender = documentSnapshot['gender'];
               doctype = documentSnapshot['doctype'];
+              status = documentSnapshot['urgentflag'];
             });
           }
         });
@@ -891,10 +894,50 @@ class _DocProfileState extends State<DocProfile> {
                             decoration: BoxDecoration(
                                 color: Colors.blue[400],
                                 borderRadius: BorderRadius.circular(20)),
-                          )
+                          ),
                         ],
                       )),
-                )
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.30,
+                  margin: EdgeInsets.only(
+                      left: MediaQuery.of(context).padding.top * 11.1,
+                      top: MediaQuery.of(context).padding.top * 8),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(30),
+                    elevation: 10,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Text(
+                            "Urgent",
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontWeight: FontWeight.w900),
+                          ),
+                        ),
+                        FlutterSwitch(
+                          width: 50.0,
+                          height: 25.0,
+                          valueFontSize: 25.0,
+                          toggleSize: 21.0,
+                          value: status,
+                          borderRadius: 30.0,
+                          padding: 3.0,
+                          onToggle: (val) {
+                            setState(() {
+                              status = val;
+                              users.doc('$phone').update({'urgentflag': val});
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
             Row(
@@ -925,7 +968,7 @@ class _DocProfileState extends State<DocProfile> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 168.0),
+                  padding: const EdgeInsets.only(top: 20, right: 30),
                   child: GestureDetector(
                     onTap: () {
                       _showDialog2(context);
@@ -948,27 +991,7 @@ class _DocProfileState extends State<DocProfile> {
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
                 Column(
-                  children: [
-                    Text(
-                      'Normal',
-                      style: TextStyle(
-                          color: Colors.blue[400],
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800),
-                    ),
-                    Text(
-                      '$normalcharge/min',
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w800),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.08,
-                ),
-                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Urgent',
@@ -978,12 +1001,19 @@ class _DocProfileState extends State<DocProfile> {
                           fontWeight: FontWeight.w800),
                     ),
                     Text(
-                      '$urgentcharge/min',
+                      '+\$$urgentcharge/min',
                       style: TextStyle(
                           color: Colors.black54,
                           fontSize: 25,
                           fontWeight: FontWeight.w800),
-                    )
+                    ),
+                    Text(
+                      '(Additional Charges on urgent appoinment)',
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800),
+                    ),
                   ],
                 )
               ],
@@ -1004,7 +1034,7 @@ class _DocProfileState extends State<DocProfile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '$hvcharge',
+                          '\$$hvcharge /min',
                           style: TextStyle(
                               color: Colors.blue[400],
                               fontSize: 20,
@@ -1026,7 +1056,7 @@ class _DocProfileState extends State<DocProfile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '$vcharge',
+                          '\$$vcharge /min',
                           style: TextStyle(
                               color: Colors.blue[400],
                               fontSize: 20,
@@ -1053,7 +1083,7 @@ class _DocProfileState extends State<DocProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$ccharge',
+                            '\$$ccharge /min',
                             style: TextStyle(
                                 color: Colors.blue[400],
                                 fontSize: 20,

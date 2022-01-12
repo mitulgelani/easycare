@@ -1,3 +1,4 @@
+import 'package:easycare/Pages/PatientSide/healthcareprovider/healthcarelist.dart';
 import 'package:flutter/material.dart';
 
 class UrgentHome extends StatefulWidget {
@@ -151,10 +152,10 @@ class _UrgentHomeState extends State<UrgentHome> {
                               )
                             : InkWell(
                                 onTap: () {
-                                  /*   Navigator.push(
+                                  Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => DoctorHome())); */
+                                          builder: (context) => DoctorList()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -241,7 +242,10 @@ class _UrgentHomeState extends State<UrgentHome> {
                                 ),
                               )
                             : InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DoctorList()));
+                                },
                                 child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
