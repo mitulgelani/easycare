@@ -3,11 +3,16 @@ import 'package:easycare/Pages/PatientSide/healthcareprovider/urgent_nonurgent.d
 import 'package:flutter/material.dart';
 
 class DoctorHome extends StatefulWidget {
+  final String provider;
+
+  const DoctorHome({Key? key, required this.provider}) : super(key: key);
   @override
-  _DoctorHomeState createState() => _DoctorHomeState();
+  _DoctorHomeState createState() => _DoctorHomeState(provider);
 }
 
 class _DoctorHomeState extends State<DoctorHome> {
+  late String provider;
+
   List<String> doctor_types = <String>[
     "Any",
     "GENERAL PRACTICE, Family medicine and general medical care",
@@ -44,6 +49,8 @@ class _DoctorHomeState extends State<DoctorHome> {
     "CHEMICAL PATHOLOGY, metabolic diseases, electrolyte imbalances",
     "CLINICAL MICROBIOLOGY, Virologists, immunologists, Parasitologists, Chronic infections",
   ];
+
+  _DoctorHomeState(this.provider);
 
   @override
   Widget build(BuildContext context) {

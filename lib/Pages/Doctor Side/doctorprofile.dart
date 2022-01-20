@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easycare/Pages/Doctor%20Side/timeavailability.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:line_icons/line_icon.dart';
@@ -17,6 +19,8 @@ class DocProfile extends StatefulWidget {
 
 class _DocProfileState extends State<DocProfile> {
   late String gender = '', doctype = '';
+  late bool _isChecked = false, _ischecked2 = false;
+
   late bool status = false;
   CollectionReference users = FirebaseFirestore.instance.collection('doctor');
 
@@ -74,38 +78,146 @@ class _DocProfileState extends State<DocProfile> {
   void initState() {
     super.initState();
     Future<String> docauthphone = prefs.getAuthToken('docphone');
-    docauthphone.then((value) {
-      setState(() async {
-        phone = value.toString();
+    docauthphone.then((value) async {
+      phone = value.toString();
 
-        await FirebaseFirestore.instance
-            .collection('doctor')
-            .doc(phone)
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            setState(() {
-              fullname = documentSnapshot['fullname'];
-              date = documentSnapshot['date'];
-              normalcharge = documentSnapshot['normalcharges'];
-              urgentcharge = documentSnapshot['urgentcharges'];
-              aboutme = documentSnapshot['aboutme'];
-              location = documentSnapshot['clinicaddress'];
-              university = documentSnapshot['university'];
-              course = documentSnapshot['fieldcourse'];
-              exhospital = documentSnapshot['exhospital'];
-              exhospitaladd = documentSnapshot['exhospitaladd'];
-              hvcharge = documentSnapshot['homevisitcharges'];
-              vcharge = documentSnapshot['videocharges'];
-              ccharge = documentSnapshot['clinicharges'];
-              gender = documentSnapshot['gender'];
-              doctype = documentSnapshot['doctype'];
-              status = documentSnapshot['urgentflag'];
-            });
-          }
-        });
+      await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(phone)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          setState(() {
+            fullname = documentSnapshot['fullname'];
+            date = documentSnapshot['date'];
+            normalcharge = documentSnapshot['normalcharges'];
+            urgentcharge = documentSnapshot['urgentcharges'];
+            aboutme = documentSnapshot['aboutme'];
+            location = documentSnapshot['clinicaddress'];
+            university = documentSnapshot['university'];
+            course = documentSnapshot['fieldcourse'];
+            exhospital = documentSnapshot['exhospital'];
+            exhospitaladd = documentSnapshot['exhospitaladd'];
+            hvcharge = documentSnapshot['homevisitcharges'];
+            vcharge = documentSnapshot['videocharges'];
+            ccharge = documentSnapshot['clinicharges'];
+            gender = documentSnapshot['gender'];
+            doctype = documentSnapshot['doctype'];
+            status = documentSnapshot['urgentflag'];
+          });
+        }
       });
     });
+  }
+
+  Future _showDialog9(context) async {
+    return await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                //your code dropdown button here
+                Text(
+                  'Time Availability',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 1.0, right: 0.0, top: 10, bottom: 10),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: MediaQuery.of(context).size.width,
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.blue[400],
+                      child: Text("Save Changes"),
+                      onPressed: () {
+                        users.doc('$phone').update({});
+                        Navigator.of(context).pop();
+                      },
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                )
+              ]);
+            }),
+          );
+        });
+  }
+
+  Future _showDialog8(context) async {
+    return await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                //your code dropdown button here
+                Text(
+                  'Check Availability',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                ),
+                CheckboxListTile(
+                  title: Text('Home Consultancy'),
+                  value: _isChecked,
+                  onChanged: (val) {
+                    setState(() {
+                      _isChecked = val!;
+                      if (val == true) {
+                        // _currText = t;
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: Text('Clinic Consultancy'),
+                  value: _ischecked2,
+                  onChanged: (val) {
+                    setState(() {
+                      _ischecked2 = val!;
+                      if (val == true) {
+                        // _currText = t;
+                      }
+                    });
+                  },
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 1.0, right: 0.0, top: 10, bottom: 10),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: MediaQuery.of(context).size.width,
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.blue[400],
+                      child: Text("Save Changes"),
+                      onPressed: () {
+                        users.doc('$phone').update({
+                          'homeflag': _isChecked,
+                          'clinicflag': _ischecked2
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                )
+              ]);
+            }),
+          );
+        });
   }
 
   Future _showDialog4(context) async {
@@ -772,6 +884,8 @@ class _DocProfileState extends State<DocProfile> {
                       ),
                       Row(
                         children: [
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.18),
                           GestureDetector(
                             onTap: () {
                               prefs.setAuthToken('docloginflag', '0');
@@ -797,54 +911,6 @@ class _DocProfileState extends State<DocProfile> {
                                 child: LineIcon(Icons.logout_rounded,
                                     size: MediaQuery.of(context).size.width *
                                         0.07)),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).padding.top * 1,
-                              left: MediaQuery.of(context).padding.top * 0.3,
-                            ),
-                            child: Stack(
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.only(
-                                      top: MediaQuery.of(context).padding.top *
-                                          2,
-                                      left: MediaQuery.of(context).padding.top *
-                                          0.5,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(
-                                            10) // use instead of BorderRadius.all(Radius.circular(20))
-                                        ),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.05,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.10,
-                                    child: LineIcon(LineIcons.bell,
-                                        size:
-                                            MediaQuery.of(context).size.width *
-                                                0.07)),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      top: MediaQuery.of(context).padding.top *
-                                          1.7,
-                                      left: MediaQuery.of(context).padding.top *
-                                          1.6),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(color: Colors.blue),
-                                      borderRadius: BorderRadius.circular(
-                                          100) // use instead of BorderRadius.all(Radius.circular(20))
-                                      ),
-                                  height: MediaQuery.of(context).size.height *
-                                      0.025,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.05,
-                                  // color: Colors.blue,
-                                ),
-                              ],
-                            ),
                           ),
                         ],
                       )
@@ -1015,11 +1081,61 @@ class _DocProfileState extends State<DocProfile> {
                           fontWeight: FontWeight.w800),
                     ),
                   ],
-                )
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.2),
+                GestureDetector(
+                  onTap: () {
+                    _showDialog8(context);
+                  },
+                  child: Container(
+                    width: 40.0,
+                    height: 40.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.blue[400],
+                      border: new Border.all(color: Colors.white, width: 2.0),
+                      borderRadius: new BorderRadius.circular(10.0),
+                    ),
+                    child: new Center(
+                        child: Icon(
+                      LineIcons.check,
+                      color: Colors.white,
+                    )),
+                  ),
+                ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Divider(
+                height: 10,
+                thickness: 2,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TimeAvailability(phone: phone)));
+              },
+              child: ListTile(
+                title: Text(
+                  "Time Availability",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                ),
+                trailing: Wrap(
+                  spacing: 12, // space between two icons
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Icon(LineIcons.clock, size: 30),
+                    ),
+                    SizedBox(
+                        width:
+                            MediaQuery.of(context).size.width * 0.02) // icon-2
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
               child: Divider(
                 height: 10,
                 thickness: 2,

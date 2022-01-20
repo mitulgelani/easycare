@@ -1,6 +1,7 @@
 import 'package:easycare/Pages/PatientSide/healthcareprovider/Massage%20Therapist/massagetherapist.dart';
 import 'package:easycare/Pages/PatientSide/healthcareprovider/doctor/doctorhome.dart';
 import 'package:easycare/Pages/PatientSide/healthcareprovider/nurse/nurse_home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HealthcareProvider_1 extends StatefulWidget {
@@ -160,7 +161,8 @@ class _HealthcareProvider_1State extends State<HealthcareProvider_1> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DoctorHome()));
+                                    builder: (context) =>
+                                        DoctorHome(provider: 'doctor')));
                           },
                           child: Container(
                             decoration: BoxDecoration(

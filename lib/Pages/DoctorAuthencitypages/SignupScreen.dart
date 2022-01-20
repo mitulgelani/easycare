@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use
 import 'package:easycare/Pages/Authenticitypages/Tasks.dart';
 import 'package:easycare/Pages/DoctorAuthencitypages/Tasks.dart';
 import 'package:easycare/Pages/DoctorAuthencitypages/loginpage.dart';
@@ -270,25 +269,38 @@ class _DoctorSignUpScreenPageState extends State<DoctorSignUpScreenPage> {
                   width: MediaQuery.of(context).size.width * 0.89,
                   child: RaisedButton(
                       color: Colors.blue[400],
-                      onPressed: () {
-                        print('doc phone' + phone);
-                        print('doc phone' + phone);
-                        print('doc phone' + phone);
-                        FirebaseFirestore.instance
+                      onPressed: () async {
+                        List<Map<String, dynamic>> timeavailability = [];
+                        for (int i = 0; i < 7; i++) {
+                          timeavailability.add({'mon': 'hahaha'});
+                        }
+                        await FirebaseFirestore.instance
                             .collection('doctor')
                             .doc(phone)
                             .set({
-                          'firstname': c1.text,
-                          'lastname': c2.text,
+                          'fullname': c1.text + ' ' + c2.text,
+                          'date': '',
+                          'normalcharge': '',
+                          'urgentcharge': '',
+                          'aboutme': '',
+                          'clinicaddress': '',
+                          'university': '',
+                          'fieldcourse': '',
+                          'exhospital': '',
+                          'exhospitaladd': '',
+                          'homevisitcharges': '',
+                          'videocharges': '',
+                          'clinicharges': '',
+                          'gender': '',
                           'email': c3.text,
                           'mobile': c4.text,
                           'password': c5.text,
                           'provider': Provider_type,
-                          'category': category
+                          'category': category,
+                          'timeavailability': timeavailability,
                         });
                         prefs.setAuthToken('docloginflag', '1');
                         prefs.setAuthToken('docphone', '$phone');
-
                         Navigator.push(
                             context,
                             MaterialPageRoute(

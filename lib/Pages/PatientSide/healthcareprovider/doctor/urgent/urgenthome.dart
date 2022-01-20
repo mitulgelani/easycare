@@ -155,7 +155,8 @@ class _UrgentHomeState extends State<UrgentHome> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => DoctorList()));
+                                          builder: (context) => DoctorList(
+                                              category: category, time: time)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -244,7 +245,8 @@ class _UrgentHomeState extends State<UrgentHome> {
                             : InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => DoctorList()));
+                                      builder: (context) => DoctorList(
+                                          category: category, time: time)));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
