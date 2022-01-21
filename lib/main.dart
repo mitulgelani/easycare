@@ -26,6 +26,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+            child: child!);
+      },
       // home: MyHomePage(),
       routes: <String, WidgetBuilder>{
         "/": (context) => SplashScreen(),

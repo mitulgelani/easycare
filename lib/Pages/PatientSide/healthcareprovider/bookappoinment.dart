@@ -8,13 +8,18 @@ import 'package:table_calendar/table_calendar.dart';
 
 class BookAppointment extends StatefulWidget {
   Map<String, dynamic> doclist;
-  BookAppointment({Key? key, required this.doclist}) : super(key: key);
+  final String date;
+  BookAppointment({Key? key, required this.doclist, required this.date})
+      : super(key: key);
 
   @override
-  _BookAppointmentState createState() => _BookAppointmentState(doclist);
+  _BookAppointmentState createState() => _BookAppointmentState(doclist, date);
 }
 
 class _BookAppointmentState extends State<BookAppointment> {
+  int bookflag = 0;
+  final String date;
+
   TextEditingController name = TextEditingController();
   TextEditingController mn = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -35,7 +40,7 @@ class _BookAppointmentState extends State<BookAppointment> {
   String day = "";
   Map<String, dynamic> doclist;
 
-  _BookAppointmentState(this.doclist);
+  _BookAppointmentState(this.doclist, this.date);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -284,8 +289,12 @@ class _BookAppointmentState extends State<BookAppointment> {
                                       style: BorderStyle.solid),
                                   borderRadius: BorderRadius.circular(10)),
                               onPressed: () {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => Calender(phone:doclist['mobile'])));
+                                    builder: (context) =>
+                                        Calender(doclist: doclist)));
                               },
 
                               /*  onPressed: () {
@@ -473,6 +482,15 @@ class _BookAppointmentState extends State<BookAppointment> {
                                 ),
                               )),
                         ),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02),
+                      Text(
+                        'Selected Appointment Date : $date',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                       SizedBox(
                           height: MediaQuery.of(context).size.height * 0.02),
@@ -728,30 +746,55 @@ class _BookAppointmentState extends State<BookAppointment> {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            width: MediaQuery.of(context).size.width,
-                            child: FlatButton(
-                                color: Colors.blue[400],
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                onPressed: () {
-                                  setState(() {
-                                    fsomeone = true;
-                                  });
-                                  /*   Navigator.push(
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              width: MediaQuery.of(context).size.width,
+                              child: bookflag == 0
+                                  ? FlatButton(
+                                      color: Colors.blue[400],
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      onPressed: () {
+                                        setState(() {
+                                          fsomeone = true;
+                                          bookflag = 1;
+                                        });
+                                        /*   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               BookAppointment())); */
-                                },
-                                child: Text(
-                                  "Book for someone else", //Review the doctor
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ),
+                                      },
+                                      child: Text(
+                                        "Book for someone else", //Review the doctor
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ))
+                                  : FlatButton(
+                                      color: Colors.blue[400],
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      onPressed: () {
+                                        setState(() {
+                                          fsomeone = false;
+                                          bookflag = 0;
+                                        });
+                                        /*   Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BookAppointment())); */
+                                      },
+                                      child: Text(
+                                        "Book for yourself", //Review the doctor
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ))),
                         ),
                       ),
                       SizedBox(

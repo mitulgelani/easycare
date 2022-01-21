@@ -47,6 +47,7 @@ dependencies:
   image_picker: ^0.8.4+4
   flutter_switch: ^0.3.2
   table_calendar: ^3.0.3
+
   #provider: 3.0.0+1
   #flashy_tab_bar: ^0.0.3
   google_fonts: any

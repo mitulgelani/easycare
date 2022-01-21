@@ -5,9 +5,7 @@ import 'package:line_icons/line_icons.dart';
 
 class DoctorDetails extends StatefulWidget {
   Map<String, dynamic> doclist;
-
   DoctorDetails({Key? key, required this.doclist}) : super(key: key);
-
   @override
   _DoctorDetailsState createState() => _DoctorDetailsState(doclist);
 }
@@ -18,7 +16,6 @@ class _DoctorDetailsState extends State<DoctorDetails> {
 
   @override
   initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -284,17 +281,17 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                               Text(
                                 "Home Visit Charges",
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.3),
+                                      MediaQuery.of(context).size.width * 0.2),
                               Text(
                                 "\$${doclist['homevisitcharges']}/min",
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 20,
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -308,17 +305,17 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                               Text(
                                 "clinic Visit Charges",
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.3),
+                                      MediaQuery.of(context).size.width * 0.2),
                               Text(
                                 "\$${doclist['cliniccharges']}/min",
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 20,
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -573,7 +570,8 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                             borderRadius: BorderRadius.circular(10)),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => BookAppointment(doclist:doclist)));
+                              builder: (context) =>
+                                  BookAppointment(doclist: doclist, date: '')));
                         },
                         child: Text(
                           "Book Appointment", //Review the doctor
